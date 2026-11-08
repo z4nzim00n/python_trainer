@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.build/
+
+# временные файлы файловых заданий
+input.txt
+output.txt
+copy.txt
+numbers.txt
+text.txt

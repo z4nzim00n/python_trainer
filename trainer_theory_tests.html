@@ -1,0 +1,3518 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="catppuccin">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Python Practice — тесты по теории</title>
+
+    <!-- Inter + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           TOKENS
+           ============================================================ */
+        :root {
+            --radius-lg: 18px;
+            --radius-md: 14px;
+            --radius-sm: 9px;
+
+            --fs-ui: 14px;
+            --fs-base: 15px;
+
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-code: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
+        }
+
+        /* ============================================================
+           THEMES
+           ============================================================ */
+
+        :root[data-theme="gruvbox"] {
+            --bg:#282828; --bg2:#1D2021;
+            --panel:#32302F; --panel2:#3C3836;
+            --border:#504945;
+            --text:#EBDBB2; --text-strong:#FBF1C7; --muted:#A89984;
+            --accent:#83A598; --accent-soft:rgba(131,165,152,.16);
+            --green:#B8BB26; --yellow:#FABD2F; --red:#FB4934;
+            --glow1:rgba(131,165,152,.10); --glow2:rgba(250,189,47,.05);
+            --opt-bg:rgba(29,32,33,.72);
+            --code-bg:#1D2021;
+            --shadow:0 8px 30px -10px rgba(0,0,0,.8);
+        }
+
+        /* ---- Everforest Dark Medium ---- */
+        :root[data-theme="everforest"] {
+            --bg: #2D353B;
+            --panel: #343F44;
+            --panel-alt: #3D484D;
+            --panel-hover: #475258;
+
+            --border: #475258;
+            --border-hover: #A7C080;
+
+            --text: #D3C6AA;
+            --text-strong: #E4DCC2;
+            --muted: #859289;
+
+            --accent: #A7C080;
+            --accent-soft: rgba(167, 192, 128, .16);
+
+            --green: #A7C080;
+            --yellow: #DBBC7F;
+            --red: #E67E80;
+
+            --glow1: rgba(167, 192, 128, .10);
+            --glow2: rgba(219, 188, 127, .05);
+
+            --hl-comment: #859289;
+            --hl-string: #A7C080;
+            --hl-char: #E69875;
+            --hl-preproc: #83C092;
+
+            --hl-keyword: #E67E80;
+            --hl-type: #D3C6AA;
+            --hl-number: #D699B6;
+            --hl-func: #A7C080;
+
+            --code-block-bg: #272E33;
+            --table-header: #3D484D;
+
+            --shadow: 0 4px 20px -8px rgba(0, 0, 0, .8);
+            --shadow-hover: 0 8px 30px -8px rgba(0, 0, 0, .95);
+
+            --yellow-dim: #8C7851;
+            --reveal-hover: rgba(219, 188, 127, .08);
+
+            --green-dim: #52684A;
+            --done-hover: rgba(167, 192, 128, .08);
+        }
+
+        :root[data-theme="catppuccin"] {
+            --bg:#1e1e2e; --bg2:#11111b;
+            --panel:#181825; --panel2:#313244;
+            --border:#45475a;
+            --text:#bac2de; --text-strong:#cdd6f4; --muted:#a6adc8;
+            --accent:#89b4fa; --accent-soft:rgba(137,180,250,.15);
+            --green:#a6e3a1; --yellow:#f9e2af; --red:#f38ba8;
+            --glow1:rgba(137,180,250,.08); --glow2:rgba(166,227,161,.05);
+            --opt-bg:rgba(17,17,27,.72);
+            --code-bg:#11111b;
+            --shadow:0 8px 28px -10px rgba(0,0,0,.75);
+        }
+
+        :root[data-theme="kanagawa"] {
+            --bg:#1F1F28; --bg2:#16161D;
+            --panel:#2A2A37; --panel2:#363646;
+            --border:#54546D;
+            --text:#DCD7BA; --text-strong:#F2E9DE; --muted:#957FB8;
+            --accent:#7FB4CA; --accent-soft:rgba(127,180,202,.15);
+            --green:#98BB6C; --yellow:#E6C384; --red:#E82424;
+            --glow1:rgba(126,156,216,.07); --glow2:rgba(152,187,108,.05);
+            --opt-bg:rgba(22,22,29,.72);
+            --code-bg:#16161D;
+            --shadow:0 8px 28px -10px rgba(0,0,0,.68);
+        }
+
+        :root[data-theme="nord"] {
+            --bg:#2E3440; --bg2:#292E39;
+            --panel:#3B4252; --panel2:#434C5E;
+            --border:#4C566A;
+            --text:#E5E9F0; --text-strong:#ECEFF4; --muted:#8FA1B3;
+            --accent:#88C0D0; --accent-soft:rgba(136,192,208,.15);
+            --green:#A3BE8C; --yellow:#EBCB8B; --red:#BF616A;
+            --glow1:rgba(94,129,172,.15); --glow2:rgba(163,190,140,.08);
+            --opt-bg:rgba(41,46,57,.72);
+            --code-bg:#292E39;
+            --shadow:0 8px 28px -10px rgba(0,0,0,.6);
+        }
+
+        :root[data-theme="dracula"] {
+            --bg:#282A36; --bg2:#21222C;
+            --panel:#343746; --panel2:#44475A;
+            --border:#50536B;
+            --text:#F8F8F2; --text-strong:#FFFFFF; --muted:#A9B1C6;
+            --accent:#BD93F9; --accent-soft:rgba(189,147,249,.15);
+            --green:#50FA7B; --yellow:#F1FA8C; --red:#FF5555;
+            --glow1:rgba(189,147,249,.10); --glow2:rgba(80,250,123,.06);
+            --opt-bg:rgba(33,34,44,.72);
+            --code-bg:#21222C;
+            --shadow:0 8px 28px -10px rgba(0,0,0,.72);
+        }
+
+        :root[data-theme="dark"] {
+            --bg:#0D1117; --bg2:#010409;
+            --panel:#161B22; --panel2:#1C222C;
+            --border:#30363D;
+            --text:#C9D1D9; --text-strong:#F0F6FC; --muted:#8B949E;
+            --accent:#58A6FF; --accent-soft:rgba(88,166,255,.15);
+            --green:#56D364; --yellow:#E3B341; --red:#F85149;
+            --glow1:rgba(88,166,255,.08); --glow2:rgba(86,211,100,.05);
+            --opt-bg:rgba(1,4,9,.72);
+            --code-bg:#010409;
+            --shadow:0 8px 30px -10px rgba(0,0,0,.85);
+        }
+
+        :root[data-theme="light"] {
+            --bg:#FFFFFF; --bg2:#F6F8FA;
+            --panel:#F6F8FA; --panel2:#EAEEF2;
+            --border:#D0D7DE;
+            --text:#1F2328; --text-strong:#0E1116; --muted:#59636E;
+            --accent:#0969DA; --accent-soft:rgba(9,105,218,.12);
+            --green:#1A7F37; --yellow:#9A6700; --red:#CF222E;
+            --glow1:rgba(9,105,218,.05); --glow2:rgba(26,127,55,.04);
+            --opt-bg:rgba(246,248,250,.9);
+            --code-bg:#F6F8FA;
+            --shadow:0 6px 24px -8px rgba(0,0,0,.13);
+        }
+
+
+        /* ============================================================
+           BASE
+           ============================================================ */
+
+        * {
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
+        }
+
+        html {
+            scroll-behavior:smooth;
+        }
+
+        body {
+            min-height:100vh;
+            color:var(--text);
+
+            background:
+                    radial-gradient(
+                            ellipse at 10% 0%,
+                            var(--glow1),
+                            transparent 45%
+                    ),
+                    radial-gradient(
+                            ellipse at 100% 12%,
+                            var(--glow2),
+                            transparent 42%
+                    ),
+                    var(--bg);
+
+            font-family:var(--font-main);
+            font-size:var(--fs-ui);
+            line-height:1.55;
+
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            text-rendering:optimizeLegibility;
+
+            transition:
+                    background .3s ease,
+                    color .3s ease;
+        }
+
+        button,
+        input,
+        select {
+            font:inherit;
+        }
+
+        button {
+            cursor:pointer;
+            border:1px solid var(--border);
+            border-radius:var(--radius-sm);
+            background:var(--panel);
+            color:var(--text);
+            transition:
+                    background .16s,
+                    border-color .16s,
+                    color .16s,
+                    transform .16s,
+                    filter .16s;
+        }
+
+        button:hover:not(:disabled) {
+            background:var(--panel2);
+            border-color:var(--accent);
+            transform:translateY(-1px);
+        }
+
+        button:active:not(:disabled) {
+            transform:scale(.98);
+        }
+
+        button:disabled {
+            cursor:default;
+            opacity:.55;
+        }
+
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline:2px solid var(--accent);
+            outline-offset:2px;
+        }
+
+        code {
+            font-family:var(--font-code);
+            background:var(--code-bg);
+            padding:2px 6px;
+            border-radius:5px;
+            font-size:.9em;
+            color:var(--accent);
+        }
+
+        ::-webkit-scrollbar {
+            width:8px;
+            height:8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background:transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background:var(--border);
+            border-radius:4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background:var(--muted);
+        }
+
+
+        /* ============================================================
+           WRAP
+           ============================================================ */
+
+        .wrap {
+            width:min(980px,100%);
+            margin:0 auto;
+            padding:36px 20px 80px;
+        }
+
+
+        /* ============================================================
+           SETTINGS
+           ============================================================ */
+
+        .settings {
+            position:fixed;
+            top:18px;
+            right:18px;
+            z-index:50;
+
+            display:flex;
+            align-items:center;
+            gap:9px;
+
+            padding:8px 10px;
+
+            border:1px solid var(--border);
+            border-radius:14px;
+
+            background:color-mix(
+                    in srgb,
+                    var(--panel) 92%,
+                    transparent
+            );
+
+            backdrop-filter:blur(14px);
+            box-shadow:var(--shadow);
+        }
+
+        .theme-select {
+            min-width:145px;
+            padding:7px 28px 7px 9px;
+
+            border:1px solid var(--border);
+            border-radius:8px;
+
+            background:var(--panel2);
+            color:var(--text);
+
+            font-size:12px;
+            cursor:pointer;
+            outline:none;
+        }
+
+        .theme-select:hover {
+            border-color:var(--accent);
+        }
+
+        .font-control {
+            display:flex;
+            align-items:center;
+            gap:8px;
+
+            color:var(--muted);
+            font-size:11px;
+            white-space:nowrap;
+        }
+
+        .font-slider {
+            width:85px;
+            height:4px;
+
+            -webkit-appearance:none;
+            appearance:none;
+
+            background:var(--border);
+            border-radius:2px;
+            outline:none;
+        }
+
+        .font-slider::-webkit-slider-thumb {
+            width:13px;
+            height:13px;
+
+            -webkit-appearance:none;
+            appearance:none;
+
+            border:none;
+            border-radius:50%;
+
+            background:var(--accent);
+            cursor:pointer;
+        }
+
+        .font-slider::-moz-range-thumb {
+            width:13px;
+            height:13px;
+
+            border:none;
+            border-radius:50%;
+
+            background:var(--accent);
+            cursor:pointer;
+        }
+
+
+        /* ============================================================
+           HERO
+           ============================================================ */
+
+        .hero {
+            text-align:center;
+            margin-bottom:38px;
+            padding-top:24px;
+        }
+
+        .eyebrow {
+            color:var(--accent);
+            text-transform:uppercase;
+            letter-spacing:.18em;
+            font-size:11px;
+            font-weight:800;
+            margin-bottom:10px;
+        }
+
+        .hero h1 {
+            color:var(--text-strong);
+            font-size:clamp(28px,5vw,44px);
+            letter-spacing:-.04em;
+            line-height:1.1;
+        }
+
+        .hero p {
+            color:var(--muted);
+            margin-top:13px;
+            max-width:600px;
+            margin-inline:auto;
+            font-size:var(--fs-base);
+        }
+
+
+        /* ============================================================
+           TOPIC GRID
+           ============================================================ */
+
+        .grid {
+            display:grid;
+            grid-template-columns:
+                repeat(auto-fill,minmax(210px,1fr));
+            gap:14px;
+        }
+
+        .topic {
+            width:100%;
+            padding:20px;
+
+            border-radius:18px;
+            background:var(--panel);
+
+            text-align:left;
+            box-shadow:var(--shadow);
+
+            position:relative;
+        }
+
+        .topic:hover {
+            border-color:var(--accent);
+            transform:translateY(-3px);
+        }
+
+        .t-icon {
+            font-size:26px;
+            display:block;
+            margin-bottom:10px;
+        }
+
+        .t-name {
+            color:var(--text-strong);
+            font-size:16px;
+            font-weight:700;
+            letter-spacing:-.02em;
+            margin-bottom:4px;
+        }
+
+        .t-count {
+            color:var(--muted);
+            font-size:12.5px;
+        }
+
+        .t-note {
+            margin-top:9px;
+            padding:4px 8px;
+
+            border-radius:7px;
+
+            font-size:10.5px;
+
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--yellow) 14%,
+                            transparent
+                    );
+
+            color:var(--yellow);
+
+            display:inline-block;
+        }
+
+        .topic.special {
+            border-color:
+                    color-mix(
+                            in srgb,
+                            var(--yellow) 40%,
+                            var(--border)
+                    );
+        }
+
+
+        /* ============================================================
+           RANDOM PANEL
+           ============================================================ */
+
+        .rnd {
+            margin-top:26px;
+            padding:22px;
+
+            border:1px solid var(--border);
+            border-radius:18px;
+
+            background:var(--panel);
+            box-shadow:var(--shadow);
+        }
+
+        .rnd h2 {
+            color:var(--text-strong);
+            font-size:17px;
+            margin-bottom:5px;
+        }
+
+        .rnd .sub {
+            color:var(--muted);
+            font-size:13px;
+            margin-bottom:16px;
+        }
+
+        .rnd-row {
+            display:flex;
+            flex-wrap:wrap;
+            gap:13px;
+            align-items:center;
+        }
+
+        .cnt {
+            display:flex;
+            align-items:center;
+            gap:9px;
+        }
+
+        .cnt span {
+            color:var(--muted);
+            font-size:14px;
+        }
+
+        .cnt input {
+            width:76px;
+            padding:9px;
+
+            border:1px solid var(--border);
+            border-radius:10px;
+
+            background:var(--bg2);
+            color:var(--text);
+
+            text-align:center;
+            outline:none;
+        }
+
+        .chk {
+            display:flex;
+            align-items:center;
+            gap:8px;
+
+            color:var(--muted);
+            cursor:pointer;
+
+            font-size:13px;
+        }
+
+        .chk input {
+            width:17px;
+            height:17px;
+
+            accent-color:var(--accent);
+            cursor:pointer;
+        }
+
+        .primary {
+            background:var(--accent);
+            color:var(--bg);
+            border-color:var(--accent);
+
+            font-weight:700;
+            padding:11px 20px;
+        }
+
+        .primary:hover:not(:disabled) {
+            filter:brightness(1.1);
+        }
+
+
+        /* ============================================================
+           QUIZ HEADER
+           ============================================================ */
+
+        .qhead {
+            position:sticky;
+            top:0;
+            z-index:30;
+
+            padding:14px 0 12px;
+            margin-bottom:20px;
+
+            background:
+                    linear-gradient(
+                            to bottom,
+                            var(--bg) 70%,
+                            transparent
+                    );
+
+            backdrop-filter:blur(6px);
+        }
+
+        .qbar {
+            display:flex;
+            align-items:center;
+            gap:11px;
+            flex-wrap:wrap;
+            margin-bottom:11px;
+        }
+
+        .qbar .back {
+            padding:7px 13px;
+            font-size:13px;
+        }
+
+        .qbar .title {
+            color:var(--text-strong);
+            font-weight:700;
+            font-size:15.5px;
+            margin-right:auto;
+        }
+
+        .pill {
+            padding:5px 11px;
+            border-radius:20px;
+            font-size:12.5px;
+            font-weight:700;
+        }
+
+        .pill.ok {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--green) 15%,
+                            transparent
+                    );
+            color:var(--green);
+        }
+
+        .pill.bad {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--red) 15%,
+                            transparent
+                    );
+            color:var(--red);
+        }
+
+        .prog {
+            height:5px;
+            background:var(--panel2);
+            border-radius:4px;
+            overflow:hidden;
+        }
+
+        .prog-fill {
+            height:100%;
+
+            background:
+                    linear-gradient(
+                            90deg,
+                            var(--accent),
+                            var(--green)
+                    );
+
+            border-radius:4px;
+
+            transition:
+                    width .4s cubic-bezier(.4,0,.2,1);
+        }
+
+
+        /* ============================================================
+           QUESTION CARDS
+           ============================================================ */
+
+        .stack {
+            display:flex;
+            flex-direction:column;
+            gap:18px;
+        }
+
+        .card {
+            padding:24px;
+
+            border:1px solid var(--border);
+            border-radius:18px;
+
+            background:var(--panel);
+            box-shadow:var(--shadow);
+
+            animation:
+                    slideIn .45s cubic-bezier(.2,.8,.3,1);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity:0;
+                transform:translateY(22px);
+            }
+
+            to {
+                opacity:1;
+                transform:none;
+            }
+        }
+
+        .card.done {
+            opacity:.92;
+        }
+
+        .card.done:hover {
+            opacity:1;
+        }
+
+        .q-top {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            flex-wrap:wrap;
+            margin-bottom:9px;
+        }
+
+        .q-num {
+            color:var(--accent);
+            font-size:11px;
+            font-weight:800;
+            letter-spacing:.1em;
+            text-transform:uppercase;
+        }
+
+        .tag {
+            padding:3px 9px;
+            border-radius:7px;
+            font-size:10.5px;
+            font-weight:600;
+        }
+
+        .tag.multi {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--accent) 14%,
+                            transparent
+                    );
+            color:var(--accent);
+        }
+
+        .tag.src {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--yellow) 14%,
+                            transparent
+                    );
+            color:var(--yellow);
+        }
+
+        .tag.topic {
+            background:var(--panel2);
+            color:var(--muted);
+        }
+
+        .q-text {
+            color:var(--text-strong);
+            font-size:calc(var(--fs-base) + 3px);
+            font-weight:650;
+            letter-spacing:-.02em;
+            line-height:1.38;
+            margin-bottom:16px;
+        }
+
+        .opts {
+            display:flex;
+            flex-direction:column;
+            gap:9px;
+        }
+
+        .opt {
+            display:flex;
+            align-items:flex-start;
+            gap:12px;
+
+            padding:14px 16px;
+            text-align:left;
+
+            border-radius:13px;
+
+            background:var(--opt-bg);
+            width:100%;
+        }
+
+        .opt:hover:not(:disabled) {
+            border-color:var(--accent);
+        }
+
+        .opt:disabled {
+            transform:none;
+        }
+
+        .okey {
+            flex-shrink:0;
+
+            width:25px;
+            height:25px;
+
+            border-radius:8px;
+
+            background:var(--panel2);
+
+            display:grid;
+            place-items:center;
+
+            font-family:var(--font-code);
+            font-size:11.5px;
+            font-weight:800;
+
+            color:var(--muted);
+        }
+
+        .otext {
+            flex:1;
+            font-size:var(--fs-base);
+        }
+
+        .omark {
+            flex-shrink:0;
+            font-size:17px;
+            font-weight:800;
+            opacity:0;
+            transition:.2s;
+        }
+
+        .opt.sel {
+            border-color:var(--accent);
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--accent) 9%,
+                            transparent
+                    );
+        }
+
+        .opt.sel .okey {
+            background:var(--accent);
+            color:var(--bg);
+        }
+
+        .opt.right {
+            border-color:var(--green);
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--green) 10%,
+                            transparent
+                    );
+        }
+
+        .opt.right .okey {
+            background:var(--green);
+            color:var(--bg);
+        }
+
+        .opt.right .omark {
+            opacity:1;
+            color:var(--green);
+        }
+
+        .opt.bad {
+            border-color:var(--red);
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--red) 10%,
+                            transparent
+                    );
+        }
+
+        .opt.bad .okey {
+            background:var(--red);
+            color:var(--bg);
+        }
+
+        .opt.bad .omark {
+            opacity:1;
+            color:var(--red);
+        }
+
+        .opt.miss {
+            border-color:var(--yellow);
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--yellow) 9%,
+                            transparent
+                    );
+        }
+
+        .opt.miss .omark {
+            opacity:1;
+            color:var(--yellow);
+        }
+
+
+        /* ============================================================
+           EXPLANATION
+           ============================================================ */
+
+        .exp {
+            margin-top:17px;
+            border-radius:14px;
+            overflow:hidden;
+
+            animation:
+                    expand .4s cubic-bezier(.2,.8,.3,1);
+        }
+
+        @keyframes expand {
+            from {
+                opacity:0;
+                max-height:0;
+            }
+
+            to {
+                opacity:1;
+                max-height:700px;
+            }
+        }
+
+        .exp-head {
+            padding:11px 16px;
+
+            font-weight:700;
+            font-size:14px;
+
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+
+        .exp.ok .exp-head {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--green) 13%,
+                            transparent
+                    );
+            color:var(--green);
+        }
+
+        .exp.no .exp-head {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--red) 13%,
+                            transparent
+                    );
+            color:var(--red);
+        }
+
+        .exp-body {
+            padding:14px 16px;
+
+            background:var(--opt-bg);
+
+            font-size:var(--fs-base);
+            line-height:1.6;
+        }
+
+        .exp-right {
+            margin-bottom:9px;
+            padding-bottom:9px;
+            border-bottom:1px solid var(--border);
+        }
+
+        .exp-right b {
+            color:var(--green);
+        }
+
+        .exp-why {
+            color:var(--muted);
+        }
+
+        .exp-why b {
+            color:var(--text);
+            font-weight:650;
+        }
+
+        .next-wrap {
+            margin-top:16px;
+        }
+
+        .next-btn {
+            padding:11px 22px;
+        }
+
+
+        /* ============================================================
+           RESULTS
+           ============================================================ */
+
+        .res {
+            text-align:center;
+            padding:40px 26px;
+
+            border:1px solid var(--border);
+            border-radius:20px;
+
+            background:var(--panel);
+            box-shadow:var(--shadow);
+
+            animation:slideIn .5s;
+        }
+
+        .res-emo {
+            font-size:58px;
+            margin-bottom:12px;
+        }
+
+        .res h2 {
+            color:var(--text-strong);
+            font-size:26px;
+            letter-spacing:-.03em;
+            margin-bottom:7px;
+        }
+
+        .res .grade {
+            color:var(--muted);
+            margin-bottom:26px;
+            font-size:var(--fs-base);
+        }
+
+        .stats {
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:12px;
+            max-width:420px;
+            margin:0 auto 26px;
+        }
+
+        .stat {
+            padding:16px 10px;
+
+            border:1px solid var(--border);
+            border-radius:14px;
+
+            background:var(--opt-bg);
+        }
+
+        .sval {
+            font-size:26px;
+            font-weight:800;
+            letter-spacing:-.03em;
+        }
+
+        .slbl {
+            color:var(--muted);
+            font-size:10.5px;
+            text-transform:uppercase;
+            letter-spacing:.07em;
+            margin-top:2px;
+        }
+
+        .stat.g .sval {
+            color:var(--green);
+        }
+
+        .stat.r .sval {
+            color:var(--red);
+        }
+
+        .stat.a .sval {
+            color:var(--accent);
+        }
+
+        .res-act {
+            display:flex;
+            gap:11px;
+            justify-content:center;
+            flex-wrap:wrap;
+        }
+
+        .hidden {
+            display:none !important;
+        }
+
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+
+        @media(max-width:700px) {
+            .settings {
+                position:static;
+
+                width:100%;
+                margin-bottom:18px;
+
+                justify-content:center;
+                flex-wrap:wrap;
+            }
+
+            .hero {
+                padding-top:0;
+            }
+        }
+
+        @media(max-width:600px) {
+            .wrap {
+                padding:24px 14px 60px;
+            }
+
+            .card {
+                padding:18px;
+            }
+
+            .q-text {
+                font-size:calc(var(--fs-base) + 1px);
+            }
+
+            .stats {
+                grid-template-columns:1fr;
+                max-width:230px;
+            }
+
+            .theme-select {
+                min-width:135px;
+            }
+
+            .font-slider {
+                width:75px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+    <!-- ============================================================
+         SETTINGS
+         ============================================================ -->
+
+    <div class="settings">
+
+        <select
+                id="themeSelect"
+                class="theme-select"
+                title="Выбрать тему"
+        >
+            <option value="gruvbox">☕ Gruvbox</option>
+            <option value="everforest">🌿 Everforest</option>
+            <option value="catppuccin">🐈 Catppuccin</option>
+            <option value="kanagawa">🌊 Kanagawa</option>
+            <option value="nord">❄️ Nord</option>
+            <option value="dracula">🧛 Dracula</option>
+            <option value="dark">🌙 GitHub Dark</option>
+            <option value="light">☀️ GitHub Light</option>
+        </select>
+
+        <div class="font-control">
+            <span>Текст:</span>
+            <span id="fontVal">15</span>px
+
+            <input
+                    type="range"
+                    id="fontSlider"
+                    class="font-slider"
+                    min="12"
+                    max="22"
+                    value="15"
+                    step="1"
+            >
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         MENU
+         ============================================================ -->
+
+    <section id="menu">
+
+        <div class="hero">
+
+            <div class="eyebrow">
+                Python Practice / theory quiz
+            </div>
+
+            <h1>
+                Тесты по теории
+            </h1>
+
+            <p>
+                Выбери тему или собери случайный набор.
+                После каждого ответа — подробный разбор,
+                почему правильный вариант именно такой.
+            </p>
+
+        </div>
+
+
+        <div class="grid" id="topicGrid"></div>
+
+
+        <div class="rnd">
+
+            <h2>
+                🎲 Случайный набор
+            </h2>
+
+            <div class="sub">
+                Вопросы берутся понемногу из каждой выбранной темы.
+            </div>
+
+            <div class="rnd-row">
+
+                <div class="cnt">
+                    <span>Вопросов:</span>
+
+                    <input
+                            type="number"
+                            id="rndCount"
+                            value="20"
+                            min="5"
+                            max="150"
+                    >
+                </div>
+
+                <label class="chk">
+                    <input
+                            type="checkbox"
+                            id="rndWidum"
+                            checked
+                    >
+                    Включить вопросы по шаблонам и STL-алгоритмам
+                </label>
+
+                <button
+                        class="primary"
+                        id="rndStart"
+                >
+                    Начать
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         QUIZ
+         ============================================================ -->
+
+    <section id="quiz" class="hidden">
+
+        <div class="qhead">
+
+            <div class="qbar">
+
+                <button
+                        class="back"
+                        id="quitBtn"
+                >
+                    ← Выйти
+                </button>
+
+                <span
+                        class="title"
+                        id="quizTitle"
+                ></span>
+
+                <span
+                        class="pill ok"
+                        id="pillOk"
+                >
+                    ✓ 0
+                </span>
+
+                <span
+                        class="pill bad"
+                        id="pillBad"
+                >
+                    ✗ 0
+                </span>
+
+            </div>
+
+            <div class="prog">
+                <div
+                        class="prog-fill"
+                        id="progFill"
+                        style="width:0%"
+                ></div>
+            </div>
+
+        </div>
+
+        <div
+                class="stack"
+                id="stack"
+        ></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         RESULTS
+         ============================================================ -->
+
+    <section id="results" class="hidden">
+
+        <div class="res">
+
+            <div
+                    class="res-emo"
+                    id="resEmo"
+            >
+                🎉
+            </div>
+
+            <h2 id="resTitle"></h2>
+
+            <div
+                    class="grade"
+                    id="resGrade"
+            ></div>
+
+            <div class="stats">
+
+                <div class="stat g">
+                    <div
+                            class="sval"
+                            id="sOk"
+                    >
+                        0
+                    </div>
+
+                    <div class="slbl">
+                        Верно
+                    </div>
+                </div>
+
+                <div class="stat r">
+                    <div
+                            class="sval"
+                            id="sBad"
+                    >
+                        0
+                    </div>
+
+                    <div class="slbl">
+                        Ошибок
+                    </div>
+                </div>
+
+                <div class="stat a">
+                    <div
+                            class="sval"
+                            id="sPct"
+                    >
+                        0%
+                    </div>
+
+                    <div class="slbl">
+                        Результат
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="res-act">
+
+                <button
+                        class="primary"
+                        id="retryBtn"
+                >
+                    Пройти заново
+                </button>
+
+                <button id="reviewBtn">
+                    Посмотреть разбор
+                </button>
+
+                <button id="menuBtn">
+                    К списку тем
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+    "use strict";
+
+
+    /* ============================================================
+       БАНК ВОПРОСОВ
+
+       q       — вопрос
+       a       — варианты
+       correct — индексы верных ответов
+       exp     — объяснение
+       ============================================================ */
+
+    const BANK = {
+        /* ============================================================
+           ОСНОВЫ PYTHON
+           ============================================================ */
+
+        basics: {
+            icon:"🐍",
+            name:"Основы Python",
+            q:[
+
+                {
+                    q:'Какая функция выводит текст на экран?',
+                    a:[
+                        '<code>print()</code>',
+                        '<code>input()</code>',
+                        '<code>len()</code>',
+                        '<code>open()</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>print</code> печатает значения в стандартный поток вывода. <code>input</code> читает строку, <code>len</code> возвращает длину.'
+                },
+
+                {
+                    q:'Что добавляет <code>print("hi")</code> в конце вывода?',
+                    a:[
+                        'Ничего',
+                        'Перевод строки',
+                        'Пробел',
+                        'Точку с запятой'
+                    ],
+                    correct:[1],
+                    exp:'По умолчанию <code>print</code> завершает вывод символом <code>\\n</code>. Параметр <code>end</code> меняет это поведение.'
+                },
+
+                {
+                    q:'Как в Python выделяется блок кода?',
+                    a:[
+                        'Фигурными скобками',
+                        'Отступами',
+                        'Словами begin и end',
+                        'Круглыми скобками'
+                    ],
+                    correct:[1],
+                    exp:'Границы блока задают отступы. Обычно это 4 пробела. Смешивать пробелы и табуляцию нельзя.'
+                },
+
+                {
+                    q:'Нужна ли точка с запятой в конце инструкции?',
+                    a:[
+                        'Да, всегда',
+                        'Нет, конец строки уже завершает инструкцию',
+                        'Только внутри функций',
+                        'Только после print'
+                    ],
+                    correct:[1],
+                    exp:'Перевод строки завершает инструкцию. Точку с запятой можно поставить, но она не требуется.'
+                },
+
+                {
+                    q:'Какой тип имеет значение <code>"42"</code>?',
+                    a:[
+                        '<code>int</code>',
+                        '<code>float</code>',
+                        '<code>str</code>',
+                        '<code>bool</code>'
+                    ],
+                    correct:[2],
+                    exp:'Кавычки делают значение строкой. <code>int("42")</code> превратит её в число.'
+                },
+
+                {
+                    q:'Как запустить файл <code>main.py</code>?',
+                    a:[
+                        '<code>python main.py</code>',
+                        '<code>run main.py</code>',
+                        '<code>compile main.py</code>',
+                        '<code>main.py.exe</code>'
+                    ],
+                    correct:[0],
+                    exp:'Python-программы запускаются интерпретатором: <code>python main.py</code>. Отдельный exe не создаётся.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           ВВОД И ВЫВОД
+           ============================================================ */
+
+        input_output: {
+            icon:"⌨️",
+            name:"Ввод и вывод",
+            q:[
+
+                {
+                    q:'Что возвращает <code>input()</code>?',
+                    a:[
+                        'Строку',
+                        'Целое число',
+                        'Дробное число',
+                        'Логическое значение'
+                    ],
+                    correct:[0],
+                    exp:'<code>input</code> всегда возвращает <code>str</code>, даже если введены цифры. Для числа нужен <code>int</code> или <code>float</code>.'
+                },
+
+                {
+                    q:'Как прочитать целое число?',
+                    a:[
+                        '<code>int(input())</code>',
+                        '<code>input(int)</code>',
+                        '<code>parse(input())</code>',
+                        '<code>number(input())</code>'
+                    ],
+                    correct:[0],
+                    exp:'Сначала <code>input</code> читает строку, затем <code>int</code> разбирает её как целое.'
+                },
+
+                {
+                    q:'Как вывести два значения через пробел?',
+                    a:[
+                        '<code>print(a, b)</code>',
+                        '<code>print(a + b)</code>',
+                        '<code>print(a; b)</code>',
+                        '<code>print[a, b]</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>print</code> с несколькими аргументами разделяет их пробелом. <code>a + b</code> сложит числа.'
+                },
+
+                {
+                    q:'Как вывести число с двумя знаками после точки?',
+                    a:[
+                        '<code>f"{x:.2f}"</code>',
+                        '<code>f"{x:2}"</code>',
+                        '<code>f"{x.2f}"</code>',
+                        '<code>f"{x:2d}"</code>'
+                    ],
+                    correct:[0],
+                    exp:'Формат <code>:.2f</code> означает два знака после точки в фиксированном формате.'
+                },
+
+                {
+                    q:'Как прочитать строку с пробелами целиком?',
+                    a:[
+                        '<code>input()</code>',
+                        '<code>input().split()</code>',
+                        '<code>int(input())</code>',
+                        '<code>input(1)</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>input</code> читает всё до перевода строки. <code>split</code> уже потерял бы пробелы, разбив строку на части.'
+                },
+
+                {
+                    q:'Что вернёт <code>"  a  b ".split()</code>?',
+                    a:[
+                        '<code>["a", "b"]</code>',
+                        '<code>["  a", "b "]</code>',
+                        '<code>["", "a", "b"]</code>',
+                        'Ошибку'
+                    ],
+                    correct:[0],
+                    exp:'<code>split</code> без аргумента делит по пробельным символам и отбрасывает пустые части.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           ВЫРАЖЕНИЯ
+           ============================================================ */
+
+        expressions: {
+            icon:"➗",
+            name:"Выражения и вычисления",
+            q:[
+
+                {
+                    q:'Чему равно <code>7 // 2</code>?',
+                    a:[
+                        '<code>3</code>',
+                        '<code>3.5</code>',
+                        '<code>4</code>',
+                        '<code>1</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>//</code> — деление нацело: дробная часть отбрасывается, результат <code>3</code>.'
+                },
+
+                {
+                    q:'Чему равно <code>7 % 2</code>?',
+                    a:[
+                        '<code>1</code>',
+                        '<code>3</code>',
+                        '<code>0</code>',
+                        '<code>2</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>%</code> возвращает остаток от деления. Семь делится на два с остатком один.'
+                },
+
+                {
+                    q:'Чему равно <code>-7 // 3</code> в Python?',
+                    a:[
+                        '<code>-3</code>',
+                        '<code>-2</code>',
+                        '<code>-2.33</code>',
+                        '<code>2</code>'
+                    ],
+                    correct:[0],
+                    exp:'Python округляет <code>//</code> вниз, к минус бесконечности. Поэтому результат <code>-3</code>, а остаток <code>2</code>.'
+                },
+
+                {
+                    q:'Чему равно <code>2 ** 3</code>?',
+                    a:[
+                        '<code>6</code>',
+                        '<code>8</code>',
+                        '<code>9</code>',
+                        '<code>5</code>'
+                    ],
+                    correct:[1],
+                    exp:'<code>**</code> — возведение в степень: два в кубе равно восьми.'
+                },
+
+                {
+                    q:'Какой тип у результата <code>5 / 2</code>?',
+                    a:[
+                        '<code>int</code>',
+                        '<code>float</code>',
+                        '<code>str</code>',
+                        '<code>bool</code>'
+                    ],
+                    correct:[1],
+                    exp:'Обычное деление <code>/</code> всегда возвращает <code>float</code>, даже если числа делятся нацело.'
+                },
+
+                {
+                    q:'Как получить число пи?',
+                    a:[
+                        '<code>math.pi</code>',
+                        '<code>pi</code>',
+                        '<code>Math.PI</code>',
+                        '<code>math.PI</code>'
+                    ],
+                    correct:[0],
+                    exp:'После <code>import math</code> константа доступна как <code>math.pi</code>. Имена в Python чувствительны к регистру.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           ЦИКЛЫ
+           ============================================================ */
+
+        loops: {
+            icon:"🔁",
+            name:"Циклы и последовательности",
+            q:[
+
+                {
+                    q:'Какие числа даёт <code>range(1, 5)</code>?',
+                    a:[
+                        '<code>1, 2, 3, 4, 5</code>',
+                        '<code>1, 2, 3, 4</code>',
+                        '<code>0, 1, 2, 3, 4</code>',
+                        '<code>0, 1, 2, 3, 4, 5</code>'
+                    ],
+                    correct:[1],
+                    exp:'Правая граница не включается, поэтому цикл идёт от 1 до 4.'
+                },
+
+                {
+                    q:'Что делает <code>break</code>?',
+                    a:[
+                        'Завершает цикл',
+                        'Пропускает одну итерацию',
+                        'Начинает цикл заново',
+                        'Бросает исключение'
+                    ],
+                    correct:[0],
+                    exp:'<code>break</code> немедленно выходит из ближайшего цикла. Пропуск итерации — это <code>continue</code>.'
+                },
+
+                {
+                    q:'Что делает <code>continue</code>?',
+                    a:[
+                        'Пропускает остаток текущей итерации',
+                        'Завершает цикл',
+                        'Выходит из функции',
+                        'Создаёт новую итерацию с нуля'
+                    ],
+                    correct:[0],
+                    exp:'<code>continue</code> переходит к следующему шагу цикла, не выполняя оставшийся код текущей итерации.'
+                },
+
+                {
+                    q:'Как перебрать символы строки?',
+                    a:[
+                        '<code>for ch in text:</code>',
+                        '<code>for i in len(text):</code>',
+                        '<code>for ch in range(text):</code>',
+                        '<code>while text:</code>'
+                    ],
+                    correct:[0],
+                    exp:'Строка итерируется посимвольно. <code>range</code> принимает число, а не строку.'
+                },
+
+                {
+                    q:'Как выделить последнюю цифру числа?',
+                    a:[
+                        '<code>n % 10</code>',
+                        '<code>n // 10</code>',
+                        '<code>n / 10</code>',
+                        '<code>n ** 10</code>'
+                    ],
+                    correct:[0],
+                    exp:'Остаток от деления на 10 — последняя цифра. Деление нацело <code>n // 10</code> отбрасывает её.'
+                },
+
+                {
+                    q:'Почему в FizzBuzz проверка на 15 идёт первой?',
+                    a:[
+                        '15 делится и на 3, и на 5',
+                        'Так быстрее',
+                        'Иначе будет ошибка синтаксиса',
+                        '15 — простое число'
+                    ],
+                    correct:[0],
+                    exp:'Если сначала проверить кратность 3, число 15 попадёт в ветку Fizz и до FizzBuzz не дойдёт.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           СПИСКИ
+           ============================================================ */
+
+        lists: {
+            icon:"📋",
+            name:"Списки",
+            q:[
+
+                {
+                    q:'Какой индекс у первого элемента списка?',
+                    a:[
+                        '<code>0</code>',
+                        '<code>1</code>',
+                        '<code>-1</code>',
+                        'Длина списка'
+                    ],
+                    correct:[0],
+                    exp:'Индексация начинается с нуля. Последний элемент имеет индекс <code>len(numbers) - 1</code>.'
+                },
+
+                {
+                    q:'Что вернёт <code>numbers[-1]</code>?',
+                    a:[
+                        'Последний элемент',
+                        'Первый элемент',
+                        'Ошибку',
+                        'Длину списка'
+                    ],
+                    correct:[0],
+                    exp:'Отрицательный индекс считается с конца. <code>-1</code> — последний элемент.'
+                },
+
+                {
+                    q:'Что делает <code>append</code>?',
+                    a:[
+                        'Добавляет один элемент в конец',
+                        'Добавляет все элементы другого списка',
+                        'Сортирует список',
+                        'Удаляет последний элемент'
+                    ],
+                    correct:[0],
+                    exp:'<code>append(x)</code> добавляет <code>x</code> одним элементом. Для слияния списков есть <code>extend</code>.'
+                },
+
+                {
+                    q:'Чем <code>sorted</code> отличается от <code>sort</code>?',
+                    a:[
+                        '<code>sorted</code> возвращает новый список, <code>sort</code> меняет текущий',
+                        'Они полностью одинаковы',
+                        '<code>sort</code> возвращает новый список',
+                        '<code>sorted</code> меняет текущий список'
+                    ],
+                    correct:[0],
+                    exp:'<code>sorted</code> не трогает исходный список. <code>sort</code> сортирует на месте и возвращает <code>None</code>.'
+                },
+
+                {
+                    q:'Как развернуть список?',
+                    a:[
+                        '<code>numbers[::-1]</code>',
+                        '<code>numbers[::2]</code>',
+                        '<code>numbers[-1]</code>',
+                        '<code>numbers.sort()</code>'
+                    ],
+                    correct:[0],
+                    exp:'Срез с шагом <code>-1</code> идёт с конца к началу и создаёт развёрнутую копию.'
+                },
+
+                {
+                    q:'Как убрать дубликаты, сохранив порядок?',
+                    a:[
+                        'Идти по списку с <code>set</code> и собирать новые элементы',
+                        'Просто вызвать <code>set(numbers)</code>',
+                        'Отсортировать список',
+                        'Развернуть список'
+                    ],
+                    correct:[0],
+                    exp:'<code>set</code> проверяет, встречался ли элемент, а результат сохраняет порядок первого появления. Порядок самого множества не гарантирован.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           СТРОКИ
+           ============================================================ */
+
+        strings: {
+            icon:"🔤",
+            name:"Строки",
+            q:[
+
+                {
+                    q:'Можно ли изменить строку по индексу?',
+                    a:[
+                        'Нет, строки неизменяемы',
+                        'Да, как список',
+                        'Только для ASCII',
+                        'Только внутри функции'
+                    ],
+                    correct:[0],
+                    exp:'Строка неизменяема. Любое преобразование создаёт новую строку.'
+                },
+
+                {
+                    q:'Что вернёт <code>"hello"[1:4]</code>?',
+                    a:[
+                        '<code>"ell"</code>',
+                        '<code>"hell"</code>',
+                        '<code>"ello"</code>',
+                        '<code>"el"</code>'
+                    ],
+                    correct:[0],
+                    exp:'Срез включает левую границу и не включает правую: символы с индексами 1, 2 и 3.'
+                },
+
+                {
+                    q:'Что возвращают методы <code>upper</code> и <code>lower</code>?',
+                    a:[
+                        'Новые строки',
+                        'Изменяют строку на месте',
+                        '<code>None</code>',
+                        'Числа'
+                    ],
+                    correct:[0],
+                    exp:'Строки неизменяемы, поэтому методы возвращают новую строку. Исходная остаётся прежней.'
+                },
+
+                {
+                    q:'Сколько слов в <code>"a  b   c"</code> после <code>split()</code>?',
+                    a:[
+                        '<code>3</code>',
+                        '<code>5</code>',
+                        '<code>1</code>',
+                        '<code>0</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>split</code> без аргумента считает группы непробельных символов и отбрасывает пустые части.'
+                },
+
+                {
+                    q:'Как нормализовать строку для проверки палиндрома?',
+                    a:[
+                        'Привести к нижнему регистру и оставить буквы и цифры',
+                        'Только привести к верхнему регистру',
+                        'Разбить на слова',
+                        'Только развернуть строку'
+                    ],
+                    correct:[0],
+                    exp:'Палиндром сравнивают без учёта регистра и знаков: <code>lower</code> и <code>isalnum</code> убирают лишнее.'
+                },
+
+                {
+                    q:'Что делает <code>ord("a")</code>?',
+                    a:[
+                        'Возвращает числовой код символа',
+                        'Возвращает символ по коду',
+                        'Возвращает длину строки',
+                        'Сортирует строку'
+                    ],
+                    correct:[0],
+                    exp:'<code>ord</code> даёт код символа, <code>chr</code> выполняет обратное преобразование.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           КЛАССЫ
+           ============================================================ */
+
+        classes: {
+            icon:"🏛️",
+            name:"Классы и объекты",
+            q:[
+
+                {
+                    q:'Когда вызывается <code>__init__</code>?',
+                    a:[
+                        'Автоматически при создании объекта',
+                        'Только вручную',
+                        'Только при наследовании',
+                        'Никогда'
+                    ],
+                    correct:[0],
+                    exp:'Конструктор вызывается при создании экземпляра и заполняет его поля.'
+                },
+
+                {
+                    q:'Что такое <code>self</code>?',
+                    a:[
+                        'Ссылка на текущий объект',
+                        'Имя класса',
+                        'Имя модуля',
+                        'Ключевое слово для импорта'
+                    ],
+                    correct:[0],
+                    exp:'Python сам передаёт объект первым аргументом метода. Имя <code>self</code> — соглашение.'
+                },
+
+                {
+                    q:'Какой метод вызывает <code>print(obj)</code>?',
+                    a:[
+                        '<code>__str__</code>',
+                        '<code>__init__</code>',
+                        '<code>__add__</code>',
+                        '<code>__len__</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>print</code> вызывает <code>str(obj)</code>, а тот — <code>__str__</code>. Если метода нет, используется <code>__repr__</code>.'
+                },
+
+                {
+                    q:'Как объявить наследование <code>Dog</code> от <code>Animal</code>?',
+                    a:[
+                        '<code>class Dog(Animal):</code>',
+                        '<code>class Dog: Animal</code>',
+                        '<code>class Dog extends Animal:</code>',
+                        '<code>class Dog &lt;- Animal:</code>'
+                    ],
+                    correct:[0],
+                    exp:'Базовый класс указывается в скобках после имени. В Python нет ключевого слова <code>extends</code>.'
+                },
+
+                {
+                    q:'Зачем вызывать <code>super().__init__()</code>?',
+                    a:[
+                        'Чтобы выполнить конструктор родителя',
+                        'Чтобы создать новый объект',
+                        'Чтобы удалить объект',
+                        'Чтобы скопировать класс'
+                    ],
+                    correct:[0],
+                    exp:'<code>super</code> даёт доступ к методам родителя. Часто нужно, чтобы не дублировать инициализацию полей.'
+                },
+
+                {
+                    q:'Что будет при создании объекта абстрактного класса с <code>@abstractmethod</code>?',
+                    a:[
+                        '<code>TypeError</code>',
+                        'Объект создастся',
+                        'Только предупреждение',
+                        'Вернётся <code>None</code>'
+                    ],
+                    correct:[0],
+                    exp:'Абстрактный класс нельзя инстанцировать, пока все абстрактные методы не реализованы в наследнике.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           КОЛЛЕКЦИИ
+           ============================================================ */
+
+        collections: {
+            icon:"🗂️",
+            name:"Словари и множества",
+            q:[
+
+                {
+                    q:'Что произойдёт при обращении к отсутствующему ключу словаря?',
+                    a:[
+                        '<code>KeyError</code>',
+                        'Вернётся <code>None</code>',
+                        'Вернётся <code>0</code>',
+                        'Ключ создастся автоматически'
+                    ],
+                    correct:[0],
+                    exp:'Прямое обращение <code>data[key]</code> требует существующего ключа. Для безопасного чтения есть <code>get</code>.'
+                },
+
+                {
+                    q:'Что делает <code>data.get(key, default)</code>?',
+                    a:[
+                        'Возвращает значение или <code>default</code>, если ключа нет',
+                        'Бросает <code>KeyError</code>',
+                        'Удаляет ключ',
+                        'Добавляет ключ со значением <code>None</code>'
+                    ],
+                    correct:[0],
+                    exp:'Второй аргумент <code>get</code> — значение по умолчанию. Словарь при этом не меняется.'
+                },
+
+                {
+                    q:'Что хранит <code>set</code>?',
+                    a:[
+                        'Только уникальные элементы',
+                        'Пары ключ-значение',
+                        'Упорядоченный список',
+                        'Только строки'
+                    ],
+                    correct:[0],
+                    exp:'Множество отбрасывает повторы. Порядок элементов не гарантирован.'
+                },
+
+                {
+                    q:'Зачем нужен <code>Counter</code>?',
+                    a:[
+                        'Подсчитывать вхождения элементов',
+                        'Сортировать список',
+                        'Фильтровать чётные числа',
+                        'Инвертировать словарь'
+                    ],
+                    correct:[0],
+                    exp:'<code>Counter</code> — словарь частот. Он сам считает, сколько раз встретился каждый элемент.'
+                },
+
+                {
+                    q:'Что удобно использовать для группировки слов по длине?',
+                    a:[
+                        'Словарь со списками значений',
+                        'Множество',
+                        'Кортеж',
+                        'Строку'
+                    ],
+                    correct:[0],
+                    exp:'Ключ — длина, значение — список слов. <code>setdefault</code> или <code>defaultdict(list)</code> упрощают заполнение.'
+                },
+
+                {
+                    q:'Что проверяет выражение <code>key in data</code> для словаря?',
+                    a:[
+                        'Наличие ключа',
+                        'Наличие значения',
+                        'И ключ, и значение',
+                        'Длину словаря'
+                    ],
+                    correct:[0],
+                    exp:'Оператор <code>in</code> перебирает ключи. Для значений нужно <code>value in data.values()</code>.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           ИСКЛЮЧЕНИЯ
+           ============================================================ */
+
+        errors: {
+            icon:"🛡️",
+            name:"Исключения и with",
+            q:[
+
+                {
+                    q:'Что делает конструкция <code>try</code> / <code>except</code>?',
+                    a:[
+                        'Обрабатывает исключение',
+                        'Предотвращает все ошибки',
+                        'Ускоряет программу',
+                        'Пишет лог в файл'
+                    ],
+                    correct:[0],
+                    exp:'<code>try</code> выполняет код, а <code>except</code> перехватывает исключение указанного типа.'
+                },
+
+                {
+                    q:'Какое исключение бросит <code>int("abc")</code>?',
+                    a:[
+                        '<code>ValueError</code>',
+                        '<code>TypeError</code>',
+                        '<code>IndexError</code>',
+                        '<code>KeyError</code>'
+                    ],
+                    correct:[0],
+                    exp:'Строка имеет правильный тип, но неверное значение для преобразования — это <code>ValueError</code>.'
+                },
+
+                {
+                    q:'Какое исключение возникает при делении на ноль?',
+                    a:[
+                        '<code>ZeroDivisionError</code>',
+                        '<code>ValueError</code>',
+                        '<code>TypeError</code>',
+                        '<code>KeyError</code>'
+                    ],
+                    correct:[0],
+                    exp:'Деление на ноль в Python бросает <code>ZeroDivisionError</code>.'
+                },
+
+                {
+                    q:'Как бросить своё исключение?',
+                    a:[
+                        '<code>raise MyError()</code>',
+                        '<code>throw MyError()</code>',
+                        '<code>error MyError()</code>',
+                        '<code>except MyError()</code>'
+                    ],
+                    correct:[0],
+                    exp:'В Python исключение бросают через <code>raise</code>. Свой класс наследуют от <code>Exception</code>.'
+                },
+
+                {
+                    q:'Какие методы образуют контекстный менеджер?',
+                    a:[
+                        '<code>__enter__</code> и <code>__exit__</code>',
+                        '<code>__init__</code> и <code>__del__</code>',
+                        '<code>__open__</code> и <code>__close__</code>',
+                        '<code>__with__</code> и <code>__end__</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>with</code> вызывает <code>__enter__</code> на входе и <code>__exit__</code> на выходе, даже при исключении.'
+                },
+
+                {
+                    q:'Что вернёт срез <code>numbers[10:20]</code>, если список короче?',
+                    a:[
+                        'Пустой список',
+                        '<code>IndexError</code>',
+                        '<code>None</code>',
+                        'Последний элемент'
+                    ],
+                    correct:[0],
+                    exp:'Срез за границами безопасен и возвращает пустой список. <code>IndexError</code> бывает только при обращении по индексу.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           ФАЙЛЫ
+           ============================================================ */
+
+        files: {
+            icon:"📁",
+            name:"Файлы",
+            q:[
+
+                {
+                    q:'Какой режим у <code>open</code> по умолчанию?',
+                    a:[
+                        '<code>"r"</code>',
+                        '<code>"w"</code>',
+                        '<code>"a"</code>',
+                        '<code>"rb"</code>'
+                    ],
+                    correct:[0],
+                    exp:'Без режима файл открывается на чтение. Режим <code>"w"</code> перезаписывает, <code>"a"</code> дописывает.'
+                },
+
+                {
+                    q:'Зачем использовать <code>with open(...)</code>?',
+                    a:[
+                        'Файл закроется автоматически',
+                        'Файл откроется быстрее',
+                        'Файл будет прочитан в байтах',
+                        'Файл станет доступен только для записи'
+                    ],
+                    correct:[0],
+                    exp:'<code>with</code> закрывает файл даже при исключении. Это надёжнее ручного <code>close</code>.'
+                },
+
+                {
+                    q:'Что делает режим <code>"w"</code>?',
+                    a:[
+                        'Создаёт файл или очищает его',
+                        'Дописывает в конец',
+                        'Открывает только для чтения',
+                        'Читает файл побайтово'
+                    ],
+                    correct:[0],
+                    exp:'Режим <code>"w"</code> стирает старое содержимое. Для добавления нужен <code>"a"</code>.'
+                },
+
+                {
+                    q:'Почему при работе с текстом указывают <code>encoding="utf-8"</code>?',
+                    a:[
+                        'Чтобы кодировка не зависела от системы',
+                        'Чтобы файл сжимался',
+                        'Чтобы ускорить чтение',
+                        'Чтобы изменить права доступа'
+                    ],
+                    correct:[0],
+                    exp:'Явная кодировка делает поведение одинаковым на Windows, Linux и macOS.'
+                },
+
+                {
+                    q:'Как прочитать весь файл?',
+                    a:[
+                        '<code>file.read()</code>',
+                        '<code>file.readline()</code> один раз',
+                        '<code>file.readlines()[0]</code>',
+                        '<code>file.write()</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>read</code> без аргумента возвращает весь текст. <code>readline</code> читает одну строку.'
+                },
+
+                {
+                    q:'Какое исключение возникнет, если файла нет?',
+                    a:[
+                        '<code>FileNotFoundError</code>',
+                        '<code>ValueError</code>',
+                        '<code>KeyError</code>',
+                        '<code>IndexError</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>open</code> бросает <code>FileNotFoundError</code>. Его можно обработать через <code>try</code>/<code>except</code>.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           ПОТОКИ
+           ============================================================ */
+
+        concurrency: {
+            icon:"🧵",
+            name:"Потоки",
+            q:[
+
+                {
+                    q:'Что запускает поток?',
+                    a:[
+                        '<code>start()</code>',
+                        '<code>run()</code>',
+                        '<code>join()</code>',
+                        '<code>open()</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>start</code> запускает выполнение в отдельном потоке. Вызов <code>run</code> напрямую выполнил бы код в текущем потоке.'
+                },
+
+                {
+                    q:'Что делает <code>join()</code>?',
+                    a:[
+                        'Ждёт завершения потока',
+                        'Запускает поток',
+                        'Останавливает поток',
+                        'Захватывает замок'
+                    ],
+                    correct:[0],
+                    exp:'<code>join</code> блокирует текущий поток, пока рабочий не закончит. Это делает порядок вывода детерминированным.'
+                },
+
+                {
+                    q:'Зачем нужен <code>Lock</code>?',
+                    a:[
+                        'Чтобы защитить общие данные от гонки',
+                        'Чтобы ускорить любой код',
+                        'Чтобы создать поток',
+                        'Чтобы закрыть файл'
+                    ],
+                    correct:[0],
+                    exp:'Замок делает блок кода неделимым: второй поток ждёт, пока первый не освободит <code>Lock</code>.'
+                },
+
+                {
+                    q:'Что такое GIL?',
+                    a:[
+                        'Глобальная блокировка интерпретатора',
+                        'Пул потоков',
+                        'Файл блокировки',
+                        'Тип исключения'
+                    ],
+                    correct:[0],
+                    exp:'GIL не позволяет двум потокам одновременно выполнять Python-байткод. Для ввода-вывода потоки всё равно полезны.'
+                },
+
+                {
+                    q:'Что возвращает <code>executor.submit()</code>?',
+                    a:[
+                        '<code>Future</code>',
+                        'Готовый результат',
+                        'Объект <code>Thread</code>',
+                        '<code>None</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>submit</code> ставит задачу в очередь и сразу возвращает <code>Future</code> — обещание результата.'
+                },
+
+                {
+                    q:'Что делает <code>future.result()</code>?',
+                    a:[
+                        'Ждёт завершения и возвращает результат',
+                        'Запускает задачу',
+                        'Отменяет задачу',
+                        'Возвращает список задач'
+                    ],
+                    correct:[0],
+                    exp:'<code>result</code> блокирует вызывающий поток до завершения задачи и пробрасывает её исключение.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           ГЕНЕРАТОРЫ И ТИПИЗАЦИЯ
+           ============================================================ */
+
+        advanced: {
+            icon:"🧠",
+            name:"Генераторы и типизация",
+            src:true,
+            note:"Раздел 13 — необязательный",
+            q:[
+
+                {
+                    q:'Зачем нужен <code>TypeVar</code>?',
+                    a:[
+                        'Для обобщённых аннотаций типов',
+                        'Для проверки типов во время выполнения',
+                        'Для ускорения программы',
+                        'Для экономии памяти'
+                    ],
+                    correct:[0],
+                    exp:'<code>TypeVar</code> связывает типы аргумента и результата в аннотациях. На выполнение это не влияет.'
+                },
+
+                {
+                    q:'Что задаёт <code>key=lambda p: (-p[1], p[0])</code>?',
+                    a:[
+                        'Сортировку по баллу убыв., затем по имени возр.',
+                        'Сортировку по имени',
+                        'Сортировку по баллу возр.',
+                        'Случайный порядок'
+                    ],
+                    correct:[0],
+                    exp:'Кортеж сравнивается покомпонентно: минус балла даёт убывание, имя — возрастание при равных баллах.'
+                },
+
+                {
+                    q:'Чем генераторное выражение лучше списка для <code>sum</code>?',
+                    a:[
+                        'Не создаёт промежуточный список',
+                        'Всегда работает быстрее',
+                        'Меняет результат суммы',
+                        'Ничем не отличается'
+                    ],
+                    correct:[0],
+                    exp:'Генератор выдаёт значения по одному, поэтому экономит память. Для небольших списков разница может быть незаметна.'
+                },
+
+                {
+                    q:'Какой метод вызывается для <code>a + b</code>?',
+                    a:[
+                        '<code>__add__</code>',
+                        '<code>__plus__</code>',
+                        '<code>__sum__</code>',
+                        '<code>__concat__</code>'
+                    ],
+                    correct:[0],
+                    exp:'Оператор <code>+</code> превращается в вызов <code>a.__add__(b)</code>. Метод должен вернуть новый объект.'
+                },
+
+                {
+                    q:'Как сравниваются кортежи в <code>key</code>?',
+                    a:[
+                        'Покомпонентно, слева направо',
+                        'По длине',
+                        'По хешу',
+                        'Случайно'
+                    ],
+                    correct:[0],
+                    exp:'Сначала сравнивается первый элемент, при равенстве — второй и так далее. Это позволяет задать несколько правил сортировки.'
+                },
+
+                {
+                    q:'Что создаёт декоратор <code>@dataclass</code>?',
+                    a:[
+                        '<code>__init__</code>, <code>__repr__</code> и <code>__eq__</code>',
+                        'Новый поток',
+                        'Файл на диске',
+                        'Замок <code>Lock</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>dataclass</code> автоматически генерирует конструктор, представление и сравнение по полям.'
+                }
+            ]
+        }
+    };
+    
+
+
+
+    /* ============================================================
+       THEME / FONT
+       ============================================================ */
+
+    const root = document.documentElement;
+
+    const themeSelect = document.getElementById("themeSelect");
+    const fontSlider = document.getElementById("fontSlider");
+    const fontVal = document.getElementById("fontVal");
+
+    function setTheme(theme) {
+        root.setAttribute("data-theme", theme);
+
+        themeSelect.value = theme;
+
+        try {
+            localStorage.setItem(
+                "python-practice-quiz-theme",
+                theme
+            );
+        } catch (e) {}
+    }
+
+    function setFontSize(val) {
+        root.style.setProperty(
+            "--fs-base",
+            val + "px"
+        );
+
+        fontVal.textContent = val;
+        fontSlider.value = val;
+
+        try {
+            localStorage.setItem(
+                "python-practice-quiz-font",
+                val
+            );
+        } catch (e) {}
+    }
+
+    themeSelect.addEventListener(
+        "change",
+        function () {
+            setTheme(this.value);
+        }
+    );
+
+    fontSlider.addEventListener(
+        "input",
+        function () {
+            setFontSize(this.value);
+        }
+    );
+
+    (function () {
+        let savedTheme = null;
+        let savedFont = null;
+
+        try {
+            savedTheme =
+                localStorage.getItem(
+                    "python-practice-quiz-theme"
+                );
+
+            savedFont =
+                localStorage.getItem(
+                    "python-practice-quiz-font"
+                );
+        } catch (e) {}
+
+        setTheme(
+            savedTheme || "catppuccin"
+        );
+
+        setFontSize(
+            savedFont || "15"
+        );
+    })();
+
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
+
+    const KEYS = [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+    ];
+
+    const $ = id =>
+        document.getElementById(id);
+
+    const screens = {
+        menu: $("menu"),
+        quiz: $("quiz"),
+        results: $("results")
+    };
+
+    let session = null;
+
+
+    function show(name) {
+        for (const k in screens) {
+            screens[k].classList.toggle(
+                "hidden",
+                k !== name
+            );
+        }
+
+        window.scrollTo({
+            top:0,
+            behavior:"instant"
+        });
+    }
+
+
+    function shuffle(a) {
+        for (
+            let i = a.length - 1;
+            i > 0;
+            i--
+        ) {
+            const j =
+                Math.floor(
+                    Math.random() * (i + 1)
+                );
+
+            [
+                a[i],
+                a[j]
+            ] = [
+                a[j],
+                a[i]
+            ];
+        }
+
+        return a;
+    }
+
+
+    function plural(
+        n,
+        one,
+        few,
+        many
+    ) {
+        const m10 = n % 10;
+        const m100 = n % 100;
+
+        if (
+            m10 === 1 &&
+            m100 !== 11
+        ) {
+            return one;
+        }
+
+        if (
+            m10 >= 2 &&
+            m10 <= 4 &&
+            (
+                m100 < 10 ||
+                m100 >= 20
+            )
+        ) {
+            return few;
+        }
+
+        return many;
+    }
+
+
+    function el(
+        tag,
+        cls,
+        txt
+    ) {
+        const n =
+            document.createElement(tag);
+
+        if (cls) {
+            n.className = cls;
+        }
+
+        if (txt !== undefined) {
+            n.textContent = txt;
+        }
+
+        return n;
+    }
+
+
+    /* ============================================================
+       MENU
+       ============================================================ */
+
+    function buildMenu() {
+        const grid =
+            $("topicGrid");
+
+        grid.replaceChildren();
+
+        for (const key in BANK) {
+
+            const t =
+                BANK[key];
+
+            const b =
+                el(
+                    "button",
+                    "topic" +
+                    (
+                        t.src
+                            ? " special"
+                            : ""
+                    )
+                );
+
+            b.append(
+                el(
+                    "span",
+                    "t-icon",
+                    t.icon
+                ),
+
+                el(
+                    "div",
+                    "t-name",
+                    t.name
+                ),
+
+                el(
+                    "div",
+                    "t-count",
+                    t.q.length +
+                    " " +
+                    plural(
+                        t.q.length,
+                        "вопрос",
+                        "вопроса",
+                        "вопросов"
+                    )
+                )
+            );
+
+            if (t.note) {
+                b.appendChild(
+                    el(
+                        "div",
+                        "t-note",
+                        "⚠ " + t.note
+                    )
+                );
+            }
+
+            b.addEventListener(
+                "click",
+                () => {
+
+                    const qs =
+                        t.q.map(
+                            q => ({
+                                ...q,
+                                _topic:t.name,
+                                _src:!!t.src
+                            })
+                        );
+
+                    startQuiz(
+                        t.name,
+                        shuffle(qs)
+                    );
+                }
+            );
+
+            grid.appendChild(b);
+        }
+    }
+
+
+    $("rndStart").addEventListener(
+        "click",
+        () => {
+
+            const want =
+                Math.max(
+                    5,
+                    Math.min(
+                        150,
+                        parseInt(
+                            $("rndCount").value
+                        ) || 20
+                    )
+                );
+
+            const useW =
+                $("rndWidum").checked;
+
+            const pools = [];
+
+            for (const key in BANK) {
+
+                if (
+                    key === "widum" &&
+                    !useW
+                ) {
+                    continue;
+                }
+
+                pools.push(
+                    BANK[key].q.map(
+                        q => ({
+                            ...q,
+                            _topic:BANK[key].name,
+                            _src:!!BANK[key].src
+                        })
+                    )
+                );
+            }
+
+            const per =
+                Math.ceil(
+                    want / pools.length
+                );
+
+            let picked = [];
+
+            pools.forEach(
+                p => {
+                    picked =
+                        picked.concat(
+                            shuffle(
+                                p.slice()
+                            ).slice(0, per)
+                        );
+                }
+            );
+
+            picked =
+                shuffle(picked).slice(
+                    0,
+                    want
+                );
+
+            if (!picked.length) {
+                alert(
+                    "Нет доступных вопросов."
+                );
+
+                return;
+            }
+
+            startQuiz(
+                "🎲 Случайный набор",
+                picked,
+                true
+            );
+        }
+    );
+
+
+    /* ============================================================
+       QUIZ
+       ============================================================ */
+
+    function startQuiz(
+        title,
+        questions,
+        showTopic
+    ) {
+        session = {
+            title,
+            questions,
+            showTopic:!!showTopic,
+            idx:0,
+            ok:0,
+            bad:0,
+            log:[]
+        };
+
+        $("quizTitle").textContent =
+            title;
+
+        $("stack").replaceChildren();
+
+        updateBar();
+
+        show("quiz");
+
+        addQuestionCard();
+    }
+
+
+    function updateBar() {
+
+        const s =
+            session;
+
+        $("pillOk").textContent =
+            "✓ " + s.ok;
+
+        $("pillBad").textContent =
+            "✗ " + s.bad;
+
+        $("progFill").style.width =
+            (
+                s.idx /
+                s.questions.length *
+                100
+            ) + "%";
+    }
+
+
+    function addQuestionCard() {
+
+        const s =
+            session;
+
+        const q =
+            s.questions[s.idx];
+
+        const multi =
+            q.correct.length > 1;
+
+        const num =
+            s.idx;
+
+        const card =
+            el(
+                "div",
+                "card"
+            );
+
+        card.dataset.idx =
+            num;
+
+
+        /* ------------------------------------------------------------
+           TOP TAGS
+           ------------------------------------------------------------ */
+
+        const top =
+            el(
+                "div",
+                "q-top"
+            );
+
+        top.appendChild(
+            el(
+                "span",
+                "q-num",
+                `Вопрос ${num + 1} / ${s.questions.length}`
+            )
+        );
+
+        if (multi) {
+            top.appendChild(
+                el(
+                    "span",
+                    "tag multi",
+                    "Несколько ответов"
+                )
+            );
+        }
+
+        if (q._src) {
+            top.appendChild(
+                el(
+                    "span",
+                    "tag src",
+                    "раздел 13"
+                )
+            );
+        }
+
+        if (
+            s.showTopic &&
+            q._topic &&
+            !q._src
+        ) {
+            top.appendChild(
+                el(
+                    "span",
+                    "tag topic",
+                    q._topic
+                )
+            );
+        }
+
+        card.appendChild(top);
+
+
+        /* ------------------------------------------------------------
+           QUESTION
+           ------------------------------------------------------------ */
+
+        var qText =
+            el(
+                "div",
+                "q-text"
+            );
+
+        qText.innerHTML =
+            q.q;
+
+        card.appendChild(qText);
+
+
+        /* ------------------------------------------------------------
+           OPTIONS
+           ------------------------------------------------------------ */
+
+        const opts =
+            el(
+                "div",
+                "opts"
+            );
+
+        const picked = [];
+        const btns = [];
+
+        q.a.forEach(
+            (text, i) => {
+
+                const b =
+                    el(
+                        "button",
+                        "opt"
+                    );
+
+                var oText =
+                    el(
+                        "span",
+                        "otext"
+                    );
+
+                oText.innerHTML =
+                    text;
+
+                b.append(
+                    el(
+                        "span",
+                        "okey",
+                        KEYS[i]
+                    ),
+
+                    oText,
+
+                    el(
+                        "span",
+                        "omark"
+                    )
+                );
+
+                b.addEventListener(
+                    "click",
+                    () => {
+
+                        if (
+                            card.dataset.done
+                        ) {
+                            return;
+                        }
+
+                        if (multi) {
+
+                            const p =
+                                picked.indexOf(i);
+
+                            if (p === -1) {
+                                picked.push(i);
+                                b.classList.add(
+                                    "sel"
+                                );
+                            } else {
+                                picked.splice(
+                                    p,
+                                    1
+                                );
+
+                                b.classList.remove(
+                                    "sel"
+                                );
+                            }
+
+                            checkBtn.disabled =
+                                picked.length === 0;
+
+                        } else {
+
+                            picked.length = 0;
+                            picked.push(i);
+
+                            reveal();
+                        }
+                    }
+                );
+
+                btns.push(b);
+                opts.appendChild(b);
+            }
+        );
+
+        card.appendChild(opts);
+
+
+        /* ------------------------------------------------------------
+           CHECK BUTTON
+           ------------------------------------------------------------ */
+
+        const checkWrap =
+            el(
+                "div",
+                "next-wrap"
+            );
+
+        const checkBtn =
+            el(
+                "button",
+                "primary next-btn",
+                "Проверить"
+            );
+
+        checkBtn.disabled =
+            true;
+
+        checkBtn.addEventListener(
+            "click",
+            reveal
+        );
+
+        if (multi) {
+            checkWrap.appendChild(
+                checkBtn
+            );
+
+            card.appendChild(
+                checkWrap
+            );
+        }
+
+
+        $("stack").appendChild(card);
+
+        card.scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
+
+
+        /* ------------------------------------------------------------
+           REVEAL
+           ------------------------------------------------------------ */
+
+        function reveal() {
+
+            if (
+                card.dataset.done
+            ) {
+                return;
+            }
+
+            card.dataset.done =
+                "1";
+
+            card.classList.add(
+                "done"
+            );
+
+            checkWrap.remove();
+
+
+            const right =
+                q.correct
+                    .slice()
+                    .sort()
+                    .join(",");
+
+            const mine =
+                picked
+                    .slice()
+                    .sort()
+                    .join(",");
+
+            const isOk =
+                right === mine;
+
+
+            btns.forEach(
+                (b, i) => {
+
+                    b.disabled =
+                        true;
+
+                    b.classList.remove(
+                        "sel"
+                    );
+
+                    const mark =
+                        b.querySelector(
+                            ".omark"
+                        );
+
+                    if (
+                        q.correct.includes(i)
+                    ) {
+
+                        if (
+                            picked.includes(i)
+                        ) {
+
+                            b.classList.add(
+                                "right"
+                            );
+
+                            mark.textContent =
+                                "✓";
+
+                        } else {
+
+                            b.classList.add(
+                                "miss"
+                            );
+
+                            mark.textContent =
+                                "!";
+                        }
+
+                    } else if (
+                        picked.includes(i)
+                    ) {
+
+                        b.classList.add(
+                            "bad"
+                        );
+
+                        mark.textContent =
+                            "✗";
+                    }
+                }
+            );
+
+
+            if (isOk) {
+                s.ok++;
+            } else {
+                s.bad++;
+            }
+
+
+            s.log.push({
+                q:q.q,
+                ok:isOk
+            });
+
+
+            /* --------------------------------------------------------
+               EXPLANATION
+               -------------------------------------------------------- */
+
+            const exp =
+                el(
+                    "div",
+                    "exp " +
+                    (
+                        isOk
+                            ? "ok"
+                            : "no"
+                    )
+                );
+
+            exp.appendChild(
+                el(
+                    "div",
+                    "exp-head",
+                    isOk
+                        ? "✓ Верно!"
+                        : "✗ Неверно"
+                )
+            );
+
+
+            const body =
+                el(
+                    "div",
+                    "exp-body"
+                );
+
+
+            const rl =
+                el(
+                    "div",
+                    "exp-right"
+                );
+
+            const rb =
+                el("b");
+
+            rb.textContent =
+                q.correct.length > 1
+                    ? "Правильные ответы: "
+                    : "Правильный ответ: ";
+
+            rl.appendChild(rb);
+
+            var rightText =
+                document.createElement("span");
+
+            rightText.innerHTML =
+                q.correct
+                    .map(
+                        i =>
+                            KEYS[i] +
+                            ") " +
+                            q.a[i]
+                    )
+                    .join("  ·  ");
+
+            rl.appendChild(rightText);
+
+            body.appendChild(rl);
+
+
+            const why =
+                el(
+                    "div",
+                    "exp-why"
+                );
+
+            why.innerHTML =
+                q.exp;
+
+            body.appendChild(why);
+
+            exp.appendChild(body);
+
+            card.appendChild(exp);
+
+
+            /* --------------------------------------------------------
+               NEXT BUTTON
+               -------------------------------------------------------- */
+
+            const nw =
+                el(
+                    "div",
+                    "next-wrap"
+                );
+
+            const isLast =
+                s.idx ===
+                s.questions.length - 1;
+
+            const nb =
+                el(
+                    "button",
+                    "primary next-btn",
+                    isLast
+                        ? "Показать результаты →"
+                        : "Следующий вопрос →"
+                );
+
+            nb.addEventListener(
+                "click",
+                () => {
+
+                    nw.remove();
+
+                    s.idx++;
+
+                    updateBar();
+
+                    if (
+                        s.idx >=
+                        s.questions.length
+                    ) {
+                        showResults();
+                    } else {
+                        addQuestionCard();
+                    }
+                }
+            );
+
+            nw.appendChild(nb);
+
+            card.appendChild(nw);
+
+
+            updateBar();
+
+
+            setTimeout(
+                () => {
+                    nb.scrollIntoView({
+                        behavior:"smooth",
+                        block:"center"
+                    });
+                },
+                120
+            );
+        }
+    }
+
+
+    /* ============================================================
+       EXIT
+       ============================================================ */
+
+    $("quitBtn").addEventListener(
+        "click",
+        () => {
+
+            if (
+                session &&
+                session.idx > 0 &&
+                !confirm(
+                    "Выйти? Прогресс не сохранится."
+                )
+            ) {
+                return;
+            }
+
+            show("menu");
+        }
+    );
+
+
+    /* ============================================================
+       RESULTS
+       ============================================================ */
+
+    function showResults() {
+
+        const s =
+            session;
+
+        const total =
+            s.questions.length;
+
+        const pct =
+            Math.round(
+                s.ok /
+                total *
+                100
+            );
+
+        let emo;
+        let title;
+        let grade;
+
+        if (pct === 100) {
+
+            emo = "🏆";
+            title = "Идеально!";
+            grade =
+                "Все ответы верны. Так держать!";
+
+        } else if (pct >= 85) {
+
+            emo = "🎉";
+            title = "Отлично!";
+            grade =
+                "Тема освоена очень хорошо.";
+
+        } else if (pct >= 70) {
+
+            emo = "👍";
+            title = "Хорошо";
+            grade =
+                "Крепкий результат, но есть что подтянуть.";
+
+        } else if (pct >= 50) {
+
+            emo = "📚";
+            title = "Неплохо";
+            grade =
+                "Стоит повторить теорию и пройти ещё раз.";
+
+        } else {
+
+            emo = "💪";
+            title = "Есть над чем поработать";
+            grade =
+                "Загляни в theory.md и попробуй снова.";
+        }
+
+
+        $("resEmo").textContent =
+            emo;
+
+        $("resTitle").textContent =
+            title;
+
+        $("resGrade").textContent =
+            grade;
+
+        $("sOk").textContent =
+            s.ok;
+
+        $("sBad").textContent =
+            s.bad;
+
+        $("sPct").textContent =
+            pct + "%";
+
+        $("reviewBtn").classList.toggle(
+            "hidden",
+            s.bad === 0
+        );
+
+        show("results");
+    }
+
+
+    $("retryBtn").addEventListener(
+        "click",
+        () => {
+
+            startQuiz(
+                session.title,
+                shuffle(
+                    session.questions.slice()
+                ),
+                session.showTopic
+            );
+        }
+    );
+
+
+    $("reviewBtn").addEventListener(
+        "click",
+        () => {
+
+            screens.results.classList.add(
+                "hidden"
+            );
+
+            screens.quiz.classList.remove(
+                "hidden"
+            );
+
+            const first =
+                document.querySelector(
+                    ".card .exp.no"
+                );
+
+            if (first) {
+
+                first.scrollIntoView({
+                    behavior:"smooth",
+                    block:"center"
+                });
+
+            } else {
+
+                window.scrollTo({
+                    top:0,
+                    behavior:"smooth"
+                });
+            }
+        }
+    );
+
+
+    $("menuBtn").addEventListener(
+        "click",
+        () => show("menu")
+    );
+
+
+    /* ============================================================
+       INIT
+       ============================================================ */
+
+    buildMenu();
+
+</script>
+
+</body>
+</html>
